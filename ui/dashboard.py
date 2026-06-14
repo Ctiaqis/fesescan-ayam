@@ -5,141 +5,176 @@ from ui.prediction import show_prediction
 from ui.history import show_history
 from ui.about import show_about
 
+
 def inject_global_css():
     st.markdown("""
     <style>
-        /* Sembunyikan default header, footer, dan menu Streamlit */
         #MainMenu {visibility: hidden;}
         header {visibility: hidden;}
         footer {visibility: hidden;}
-        
-        /* Main background & Text colors */
+
         .stApp {
-            background-color: #F6FAFF;
-            color: #172033;
+            background-color: #FAF7FF;
+            color: #1F1B2E;
         }
-        
-        /* Sidebar styling */
+
+        /* Sidebar */
         [data-testid="stSidebar"] {
-            background-color: #07111F !important;
-            border-right: none !important;
-            min-width: 260px !important;
-            max-width: 260px !important;
+            background-color: #1F1B2E !important;
+            min-width: 256px !important;
+            max-width: 256px !important;
         }
         [data-testid="stSidebar"] * {
-            color: #FFFFFF;
+            color: #FFFFFF !important;
         }
-        
-        /* Styling Radio di Sidebar agar menjadi menu */
+
+        /* Radio sebagai menu navigasi */
         .stRadio > div[role="radiogroup"] > label {
             background: transparent;
             padding: 12px 16px !important;
             border-radius: 8px !important;
-            margin-bottom: 4px !important;
+            margin-bottom: 2px !important;
             cursor: pointer;
-            transition: 0.2s;
+            transition: background 0.2s;
         }
         .stRadio > div[role="radiogroup"] > label:hover {
-            background-color: #102A43 !important;
-            color: #FFFFFF !important;
+            background-color: #2D2640 !important;
         }
         .stRadio > div[role="radiogroup"] > label[data-checked="true"] {
-            background-color: #102A43 !important;
-            border-left: 4px solid #38BDF8 !important;
+            background-color: #3B0764 !important;
+            border-left: 3px solid #A78BFA !important;
             border-radius: 0 8px 8px 0 !important;
         }
         .stRadio > div[role="radiogroup"] > label[data-checked="true"] p {
-            color: #38BDF8 !important;
+            color: #DDD6FE !important;
             font-weight: 600 !important;
         }
-        /* Hide radio circle */
         .stRadio > div[role="radiogroup"] > label > div:first-child {
             display: none !important;
         }
-        
-        /* Custom UI containers */
-        .card {
+
+        /* Card komponen */
+        .fss-card {
             background-color: #FFFFFF;
             padding: 24px;
             border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            border: 1px solid #E5E7EB;
+            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.07);
+            border: 1px solid #EDE9FE;
+            margin-bottom: 16px;
         }
-        
-        /* Styling Buttons natively */
+
+        /* Tombol utama */
         .stButton > button {
-            background-color: #2563EB !important;
+            background-color: #7C3AED !important;
             color: #FFFFFF !important;
             border: none !important;
             border-radius: 8px !important;
             padding: 10px 20px !important;
             font-weight: 600 !important;
+            transition: background 0.2s !important;
         }
         .stButton > button:hover {
-            background-color: #1D4ED8 !important;
-            color: #FFFFFF !important;
+            background-color: #6D28D9 !important;
         }
         .stButton > button[kind="secondary"] {
-            background-color: transparent !important;
-            color: #172033 !important;
+            background-color: #FFFFFF !important;
+            color: #1F1B2E !important;
             border: 1px solid #D1D5DB !important;
         }
         .stButton > button[kind="secondary"]:hover {
-            background-color: #F3F4F6 !important;
+            background-color: #F5F3FF !important;
         }
-        
-        /* H1, H2, H3 colors */
-        h1, h2, h3 {
-            color: #172033 !important;
-            font-family: sans-serif;
+
+        /* Heading */
+        h1, h2, h3, h4 {
+            color: #1F1B2E !important;
         }
         p {
-            color: #6B7280;
+            color: #6B6478;
+        }
+
+        /* Progress bar warna */
+        .stProgress > div > div > div {
+            background-color: #7C3AED !important;
+        }
+
+        /* Metric */
+        [data-testid="stMetricValue"] {
+            color: #7C3AED !important;
+            font-size: 28px !important;
+            font-weight: 700 !important;
+        }
+        [data-testid="stMetricLabel"] {
+            color: #6B6478 !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            text-transform: uppercase !important;
+        }
+
+        /* Info box */
+        .stAlert {
+            border-radius: 10px !important;
+        }
+
+        /* Divider warna */
+        hr {
+            border-top: 1px solid #EDE9FE !important;
         }
     </style>
     """, unsafe_allow_html=True)
 
+
 def render_dashboard():
     inject_global_css()
-    
-    # Sidebar Header (Logo dan Judul)
+
+    # Sidebar header
     st.sidebar.markdown("""
-    <div style='display: flex; align-items: center; gap: 12px; margin-bottom: 30px; margin-top: -30px;'>
-        <div style='background-color: #2563EB; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px;'>
+    <div style="display:flex; align-items:center; gap:12px; padding:8px 0 28px 0;">
+        <div style="background:#7C3AED; width:40px; height:40px; border-radius:10px;
+                    display:flex; align-items:center; justify-content:center; font-size:22px; flex-shrink:0;">
             🐔
         </div>
         <div>
-            <h2 style='margin: 0; font-size: 18px; color: #FFFFFF !important; font-weight: 700;'>FesesScan Ayam</h2>
-            <p style='margin: 0; font-size: 11px; color: #94A3B8; text-transform: uppercase;'>Screening Penyakit Ayam</p>
+            <div style="font-size:16px; font-weight:700; color:#FFFFFF; line-height:1.2;">FesesScan Ayam</div>
+            <div style="font-size:11px; color:#A78BFA; text-transform:uppercase; letter-spacing:.05em;">
+                Screening Penyakit Ayam
+            </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-    # Menu
     menu = st.sidebar.radio(
         "",
-        ["Beranda", "Prediksi", "Riwayat", "Tentang"],
-        index=0
+        ["🏠  Beranda", "🔬  Prediksi", "📋  Riwayat", "ℹ️  Tentang"],
+        index=0,
+        label_visibility="collapsed",
     )
-    
-    # Push content to bottom
-    st.sidebar.markdown("<div style='flex-grow: 1; min-height: 40vh;'></div>", unsafe_allow_html=True)
-    
-    # Sidebar Footer (Model Info)
+
+    st.sidebar.markdown("<div style='min-height:200px;'></div>", unsafe_allow_html=True)
+
+    # Sidebar footer model info
     st.sidebar.markdown("""
-    <div style='background-color: #102A43; padding: 16px; border-radius: 12px; margin-top: 20px;'>
-        <p style='margin: 0 0 8px 0; color: #94A3B8; font-size: 11px; text-transform: uppercase; font-weight: 600;'>Informasi Model</p>
-        <p style='margin: 0 0 8px 0; color: #FFFFFF; font-size: 13px; font-weight: 500;'>EfficientNetB0 Direct Multiclass</p>
-        <p style='margin: 0; color: #94A3B8; font-size: 11px;'>Kelas: Healthy, Coccidiosis, Salmonella, Newcastle Disease</p>
+    <div style="background:#2D2640; padding:14px 16px; border-radius:10px; border:1px solid #3B3060;">
+        <div style="font-size:10px; color:#A78BFA; text-transform:uppercase; font-weight:600; margin-bottom:6px;">
+            Informasi Model
+        </div>
+        <div style="font-size:13px; font-weight:600; color:#FFFFFF; margin-bottom:4px;">
+            EfficientNet-B0
+        </div>
+        <div style="font-size:11px; color:#9CA3AF; line-height:1.5;">
+            Direct Multiclass Classification<br>
+            Healthy · Coccidiosis · Salmonella · Newcastle
+        </div>
     </div>
     """, unsafe_allow_html=True)
 
     # Routing
-    if menu == "Beranda":
+    label = menu.split("  ", 1)[-1]
+    if label == "Beranda":
         show_home()
-    elif menu == "Prediksi":
+    elif label == "Prediksi":
         show_prediction()
-    elif menu == "Riwayat":
+    elif label == "Riwayat":
         show_history()
-    elif menu == "Tentang":
+    elif label == "Tentang":
         show_about()

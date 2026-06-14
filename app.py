@@ -1,9 +1,7 @@
 import streamlit as st
-from config import APP_TITLE
 
-# Konfigurasi halaman harus dipanggil pertama kali
 st.set_page_config(
-    page_title=APP_TITLE,
+    page_title="FesesScan Ayam",
     page_icon="🐔",
     layout="wide",
     initial_sidebar_state="expanded",
