@@ -9,51 +9,77 @@ from ui.about import show_about
 def inject_global_css():
     st.markdown("""
     <style>
+        /* Header transparan; hanya elemen pengganggu yang disembunyikan. */
+        header[data-testid="stHeader"] {
+            background: transparent !important;
+        }
         #MainMenu {visibility: hidden;}
-        header {visibility: hidden;}
         footer {visibility: hidden;}
+        [data-testid="stToolbar"] {display: none !important;}
+        [data-testid="stDecoration"] {display: none !important;}
+        [data-testid="stStatusWidget"] {display: none !important;}
 
         .stApp {
             background-color: #FAF7FF;
             color: #1F1B2E;
         }
 
-        /* Sidebar */
+        /* Sidebar — DIPAKSA SELALU TAMPIL agar tidak bisa "hilang" saat
+           di-collapse. Override semua mekanisme collapse Streamlit. */
         [data-testid="stSidebar"] {
             background-color: #1F1B2E !important;
+            width: 256px !important;
             min-width: 256px !important;
             max-width: 256px !important;
+            transform: none !important;
+            margin-left: 0 !important;
+            left: 0 !important;
+            visibility: visible !important;
+        }
+        [data-testid="stSidebar"][aria-expanded="false"] {
+            transform: none !important;
+            margin-left: 0 !important;
         }
         [data-testid="stSidebar"] * {
             color: #FFFFFF !important;
         }
-
-        /* Radio sebagai menu navigasi */
-        .stRadio > div[role="radiogroup"] > label {
-            background: transparent;
-            padding: 12px 16px !important;
-            border-radius: 8px !important;
-            margin-bottom: 2px !important;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .stRadio > div[role="radiogroup"] > label:hover {
-            background-color: #2D2640 !important;
-        }
-        .stRadio > div[role="radiogroup"] > label[data-checked="true"] {
-            background-color: #3B0764 !important;
-            border-left: 3px solid #A78BFA !important;
-            border-radius: 0 8px 8px 0 !important;
-        }
-        .stRadio > div[role="radiogroup"] > label[data-checked="true"] p {
-            color: #DDD6FE !important;
-            font-weight: 600 !important;
-        }
-        .stRadio > div[role="radiogroup"] > label > div:first-child {
+        /* Sembunyikan tombol collapse agar sidebar tidak bisa ditutup
+           (mencegah masalah sidebar hilang dan tidak bisa dibuka lagi). */
+        [data-testid="stSidebarCollapseButton"],
+        [data-testid="stSidebarHeader"] button {
             display: none !important;
         }
 
-        /* Card komponen */
+        /* Radio sebagai menu navigasi */
+        [data-testid="stSidebar"] .stRadio [role="radiogroup"] label {
+            background: transparent;
+            padding: 11px 14px !important;
+            border-radius: 8px !important;
+            margin-bottom: 4px !important;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+        [data-testid="stSidebar"] .stRadio [role="radiogroup"] label:hover {
+            background-color: #2D2640 !important;
+        }
+        /* Sembunyikan lingkaran radio bawaan */
+        [data-testid="stSidebar"] .stRadio [role="radiogroup"] label > div:first-child {
+            display: none !important;
+        }
+        /* Item menu yang sedang aktif */
+        [data-testid="stSidebar"] .stRadio [role="radiogroup"] label:has(input:checked) {
+            background-color: #7C3AED !important;
+        }
+        [data-testid="stSidebar"] .stRadio [role="radiogroup"] label:has(input:checked) p {
+            color: #FFFFFF !important;
+            font-weight: 700 !important;
+        }
+        [data-testid="stSidebar"] .stRadio [role="radiogroup"] label p {
+            color: #C4B5FD !important;
+            font-size: 14px !important;
+        }
+
+        /* Card komponen (HTML mandiri dalam satu blok markdown) */
         .fss-card {
             background-color: #FFFFFF;
             padding: 24px;
@@ -61,6 +87,14 @@ def inject_global_css():
             box-shadow: 0 2px 8px rgba(124, 58, 237, 0.07);
             border: 1px solid #EDE9FE;
             margin-bottom: 16px;
+        }
+
+        /* Card via st.container(border=True) — bungkus konten Streamlit asli */
+        [data-testid="stVerticalBlockBorderWrapper"] {
+            background-color: #FFFFFF;
+            border: 1px solid #EDE9FE !important;
+            border-radius: 12px !important;
+            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.07);
         }
 
         /* Tombol utama */
@@ -73,6 +107,12 @@ def inject_global_css():
             font-weight: 600 !important;
             transition: background 0.2s !important;
         }
+        /* Paksa teks di dalam tombol ikut warna tombol (kalahkan aturan p global) */
+        .stButton > button p,
+        .stButton > button span,
+        .stButton > button div {
+            color: inherit !important;
+        }
         .stButton > button:hover {
             background-color: #6D28D9 !important;
         }
@@ -83,6 +123,38 @@ def inject_global_css():
         }
         .stButton > button[kind="secondary"]:hover {
             background-color: #F5F3FF !important;
+        }
+
+        /* File uploader — selaraskan dengan tema ungu */
+        [data-testid="stFileUploaderDropzone"] {
+            background-color: #F5F3FF !important;
+            border: 1.5px dashed #C4B5FD !important;
+            border-radius: 10px !important;
+        }
+        [data-testid="stFileUploaderDropzone"] * {
+            color: #4C1D95 !important;
+        }
+        [data-testid="stFileUploaderDropzone"] button {
+            background-color: #7C3AED !important;
+            color: #FFFFFF !important;
+            border: none !important;
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+        }
+        [data-testid="stFileUploaderDropzone"] button:hover {
+            background-color: #6D28D9 !important;
+        }
+        [data-testid="stFileUploaderDropzone"] button * {
+            color: #FFFFFF !important;
+        }
+        /* Chip file yang sudah diunggah */
+        [data-testid="stFileUploaderFile"] {
+            background-color: #F5F3FF !important;
+            border-radius: 8px !important;
+            padding: 4px 8px !important;
+        }
+        [data-testid="stFileUploaderFile"] * {
+            color: #1F1B2E !important;
         }
 
         /* Heading */
@@ -111,9 +183,17 @@ def inject_global_css():
             text-transform: uppercase !important;
         }
 
-        /* Info box */
+        /* Info box — selaraskan dengan tema ungu */
         .stAlert {
             border-radius: 10px !important;
+        }
+        [data-testid="stAlert"] {
+            background-color: #F3EEFF !important;
+            border: 1px solid #DDD6FE !important;
+            border-left: 4px solid #7C3AED !important;
+        }
+        [data-testid="stAlert"] * {
+            color: #3B0764 !important;
         }
 
         /* Divider warna */
@@ -144,7 +224,7 @@ def render_dashboard():
     """, unsafe_allow_html=True)
 
     menu = st.sidebar.radio(
-        "",
+        "Menu navigasi",
         ["🏠  Beranda", "🔬  Prediksi", "📋  Riwayat", "ℹ️  Tentang"],
         index=0,
         label_visibility="collapsed",

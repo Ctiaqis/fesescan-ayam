@@ -16,7 +16,7 @@ Model memprediksi gambar ke dalam empat kelas:
 ```text
 screening-feses-ayam/
 │
-├── dashboard.py
+├── app.py
 ├── config.py
 ├── requirements.txt
 ├── README.md
@@ -26,7 +26,8 @@ screening-feses-ayam/
 ├── models/
 │   └── efficientnetb0_direct_multiclass.keras
 │
-├── modules/
+├── ui/
+│   ├── dashboard.py
 │   ├── home.py
 │   ├── prediction.py
 │   ├── history.py
@@ -56,7 +57,7 @@ efficientnetb0_direct_multiclass.keras
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
-streamlit run dashboard.py
+streamlit run app.py
 ```
 
 Jika menggunakan Mac/Linux:
@@ -65,16 +66,16 @@ Jika menggunakan Mac/Linux:
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-streamlit run dashboard.py
+streamlit run app.py
 ```
 
 ## File Penting
 
-- `dashboard.py`: file utama untuk menjalankan web.
+- `app.py`: file utama untuk menjalankan web.
 - `config.py`: konfigurasi path model, ukuran gambar, dan judul aplikasi.
 - `class_names.json`: urutan nama kelas sesuai output model.
 - `models/`: lokasi model `.keras`.
-- `modules/`: halaman Beranda, Prediksi, Riwayat, dan Tentang.
+- `ui/`: halaman Beranda, Prediksi, Riwayat, dan Tentang beserta tata letak dashboard.
 - `utils/`: fungsi load model, preprocessing gambar, Grad-CAM, dan riwayat.
 
 ## Alur Prediksi

@@ -16,9 +16,7 @@ def show_history():
     history_df = load_history()
 
     # ── Action Bar ────────────────────────────────────────────────────────────
-    with st.container():
-        st.markdown("<div class='fss-card'>", unsafe_allow_html=True)
-
+    with st.container(border=True):
         info_col, btn_col = st.columns([2, 1])
 
         with info_col:
@@ -51,12 +49,8 @@ def show_history():
                     st.success("Riwayat berhasil dihapus.")
                     st.rerun()
 
-        st.markdown("</div>", unsafe_allow_html=True)
-
     # ── Tabel Riwayat ─────────────────────────────────────────────────────────
-    with st.container():
-        st.markdown("<div class='fss-card'>", unsafe_allow_html=True)
-
+    with st.container(border=True):
         if history_df.empty:
             st.markdown("""
             <div style="text-align:center; padding:48px 0;">
@@ -88,5 +82,3 @@ def show_history():
                 hide_index=True,
                 height=460,
             )
-
-        st.markdown("</div>", unsafe_allow_html=True)

@@ -32,23 +32,20 @@ def show_prediction():
 
     # ── Panel Kiri: Upload ────────────────────────────────────────────────────
     with left:
-        with st.container():
-            st.markdown("<div class='fss-card'>", unsafe_allow_html=True)
+        with st.container(border=True):
             st.markdown("**📁 Upload Gambar**")
             uploaded_file = st.file_uploader(
                 "Format JPG atau PNG",
                 type=ALLOWED_EXTENSIONS,
                 label_visibility="visible",
             )
-            st.markdown("</div>", unsafe_allow_html=True)
 
         image = None
         if uploaded_file is not None:
             image = Image.open(uploaded_file)
-            st.markdown("<div class='fss-card'>", unsafe_allow_html=True)
-            st.markdown("**🖼️ Preview Gambar**")
-            st.image(image, use_container_width=True)
-            st.markdown("</div>", unsafe_allow_html=True)
+            with st.container(border=True):
+                st.markdown("**🖼️ Preview Gambar**")
+                st.image(image, use_container_width=True)
 
         predict_clicked = st.button(
             "📊 Prediksi Sekarang",
@@ -107,43 +104,41 @@ def show_prediction():
         meta = CLASS_META.get(pred_class, {"icon": "🔎", "color": "#7C3AED", "bg": "#EDE9FE"})
 
         # ── Hasil Utama ───────────────────────────────────────────────────
-        st.markdown("<div class='fss-card'>", unsafe_allow_html=True)
-        st.markdown("**Hasil Prediksi**")
+        with st.container(border=True):
+            st.markdown("**Hasil Prediksi**")
 
-        m1, m2 = st.columns(2)
-        with m1:
-            st.metric("Kelas Terdeteksi", f"{meta['icon']} {pred_class}")
-        with m2:
-            st.metric("Confidence", f"{confidence * 100:.1f}%")
+            m1, m2 = st.columns(2)
+            with m1:
+                st.metric("Kelas Terdeteksi", f"{meta['icon']} {pred_class}")
+            with m2:
+                st.metric("Confidence", f"{confidence * 100:.1f}%")
 
-        st.markdown("---")
+            st.markdown("---")
 
-        # ── Probability Bars ──────────────────────────────────────────────
-        st.markdown("**Distribusi Probabilitas**")
-        st.write("")
+            # ── Probability Bars ──────────────────────────────────────────
+            st.markdown("**Distribusi Probabilitas**")
+            st.write("")
 
-        result_df = pd.DataFrame(
-            {"Kelas": class_names, "Probabilitas": probabilities}
-        ).sort_values("Probabilitas", ascending=False)
+            result_df = pd.DataFrame(
+                {"Kelas": class_names, "Probabilitas": probabilities}
+            ).sort_values("Probabilitas", ascending=False)
 
-        for _, row in result_df.iterrows():
-            cls = row["Kelas"]
-            prob = float(row["Probabilitas"])
-            m = CLASS_META.get(cls, {"icon": "·", "color": "#7C3AED", "bg": "#EDE9FE"})
+            for _, row in result_df.iterrows():
+                cls = row["Kelas"]
+                prob = float(row["Probabilitas"])
+                m = CLASS_META.get(cls, {"icon": "·", "color": "#7C3AED", "bg": "#EDE9FE"})
 
-            col_label, col_bar = st.columns([1, 2])
-            with col_label:
-                st.markdown(
-                    f"<div style='display:flex; align-items:center; gap:6px; "
-                    f"padding:4px 0; font-size:13px; font-weight:600; color:#1F1B2E;'>"
-                    f"{m['icon']} {cls}</div>",
-                    unsafe_allow_html=True,
-                )
-            with col_bar:
-                pct_label = f"{prob * 100:.1f}%"
-                st.progress(prob, text=pct_label)
-
-        st.markdown("</div>", unsafe_allow_html=True)
+                col_label, col_bar = st.columns([1, 2])
+                with col_label:
+                    st.markdown(
+                        f"<div style='display:flex; align-items:center; gap:6px; "
+                        f"padding:4px 0; font-size:13px; font-weight:600; color:#1F1B2E;'>"
+                        f"{m['icon']} {cls}</div>",
+                        unsafe_allow_html=True,
+                    )
+                with col_bar:
+                    pct_label = f"{prob * 100:.1f}%"
+                    st.progress(prob, text=pct_label)
 
         # ── Simpan riwayat ────────────────────────────────────────────────
         save_history({
@@ -154,32 +149,30 @@ def show_prediction():
         })
 
         # ── Grad-CAM ──────────────────────────────────────────────────────
-        st.markdown("<div class='fss-card'>", unsafe_allow_html=True)
-        st.markdown("**👁️ Visualisasi Grad-CAM**")
-        st.caption(
-            "Grad-CAM menampilkan area pada citra yang paling berkontribusi "
-            "terhadap keputusan model."
-        )
-
-        gcam_left, gcam_right = st.columns(2, gap="medium")
-        with gcam_left:
-            st.markdown(
-                "<p style='font-size:12px; font-weight:600; text-align:center;'>"
-                "Gambar Asli</p>",
-                unsafe_allow_html=True,
+        with st.container(border=True):
+            st.markdown("**👁️ Visualisasi Grad-CAM**")
+            st.caption(
+                "Grad-CAM menampilkan area pada citra yang paling berkontribusi "
+                "terhadap keputusan model."
             )
-            st.image(image, use_container_width=True)
 
-        with gcam_right:
-            st.markdown(
-                "<p style='font-size:12px; font-weight:600; text-align:center;'>"
-                "Hasil Grad-CAM</p>",
-                unsafe_allow_html=True,
-            )
-            try:
-                overlay = create_gradcam_overlay(image, model)
-                st.image(overlay, use_container_width=True)
-            except Exception:
-                st.warning("Grad-CAM tidak dapat diproses untuk gambar ini.", icon="⚠️")
+            gcam_left, gcam_right = st.columns(2, gap="medium")
+            with gcam_left:
+                st.markdown(
+                    "<p style='font-size:12px; font-weight:600; text-align:center;'>"
+                    "Gambar Asli</p>",
+                    unsafe_allow_html=True,
+                )
+                st.image(image, use_container_width=True)
 
-        st.markdown("</div>", unsafe_allow_html=True)
+            with gcam_right:
+                st.markdown(
+                    "<p style='font-size:12px; font-weight:600; text-align:center;'>"
+                    "Hasil Grad-CAM</p>",
+                    unsafe_allow_html=True,
+                )
+                try:
+                    overlay = create_gradcam_overlay(image, model)
+                    st.image(overlay, use_container_width=True)
+                except Exception:
+                    st.warning("Grad-CAM tidak dapat diproses untuk gambar ini.", icon="⚠️")
