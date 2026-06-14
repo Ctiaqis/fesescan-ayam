@@ -1,3 +1,5 @@
+# judul aplikasi, path model, ukuran gambar
+
 from pathlib import Path
 
 # ============================================================
