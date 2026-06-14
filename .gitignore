@@ -1,0 +1,14 @@
+.venv/
+venv/
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+.DS_Store
+.env
+
+# Riwayat prediksi lokal tidak wajib masuk repo
+data/prediction_history.csv
+
+# File besar opsional. Hapus tanda # kalau GitHub menolak upload model.
+# models/*.keras
+# models/*.h5
