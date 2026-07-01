@@ -7,6 +7,7 @@ from utils.preprocessing import predict_image
 from utils.gradcam import create_gradcam_overlay
 from utils.narrative_generator import generate_narrative
 from styles import SHADCN_CSS
+import traceback
 
 st.set_page_config(page_title=APP_TITLE, page_icon="🐔", layout="wide")
 st.markdown(SHADCN_CSS, unsafe_allow_html=True)
@@ -139,6 +140,8 @@ def main():
                     )
             except Exception as e:
                 st.error(f"Terjadi kesalahan saat memproses gambar: {e}")
+                with st.expander("🔧 Detail teknis (klik untuk lihat traceback lengkap)"):
+                    st.code(traceback.format_exc())
         elif uploaded_file is not None:
             empty_state('Klik "Prediksi Sekarang" untuk melihat hasil analisis', "🔍")
         else:

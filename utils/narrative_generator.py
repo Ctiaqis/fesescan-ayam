@@ -6,10 +6,19 @@ from config import OPENAI_API_KEY, NARRATIVE_MODEL, BASE_DIR
 
 TEMPLATE_PATH = BASE_DIR / "data" / "narrative_templates.json"
 
+DEFAULT_FALLBACK_TEXT = (
+    "Deskripsi otomatis belum dapat dibuat saat ini. "
+    "Silakan lihat probabilitas tiap kelas di atas dan konsultasikan ke dokter hewan untuk kepastian."
+)
+
 def _load_fallback_template(pred_class: str) -> str:
-    with open(TEMPLATE_PATH, "r", encoding="utf-8") as f:
-        templates = json.load(f)
-    return templates.get(pred_class, "Deskripsi untuk kelas ini belum tersedia.")
+    try:
+        with open(TEMPLATE_PATH, "r", encoding="utf-8") as f:
+            templates = json.load(f)
+        return templates.get(pred_class, DEFAULT_FALLBACK_TEXT)
+    except Exception:
+        # File belum ada / path salah / JSON rusak — tetap jangan sampai app crash
+        return DEFAULT_FALLBACK_TEXT
 
 @st.cache_data(show_spinner=False, ttl=3600)
 def generate_narrative(pred_class: str, confidence: float, probabilities: dict) -> str:

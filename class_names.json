@@ -1,9 +1,1 @@
-{
-  "Healthy": "Feses menunjukkan karakteristik normal dengan tekstur, warna, dan konsistensi yang wajar, tanpa indikasi gangguan pencernaan atau infeksi. Kondisi ini menandakan ayam dalam keadaan sehat. Tetap jaga kebersihan kandang, kualitas pakan, dan lakukan pemantauan rutin untuk mempertahankan kondisi ini.",
-
-  "Coccidiosis": "Pola feses mengindikasikan kemungkinan infeksi coccidiosis, yaitu penyakit yang disebabkan oleh parasit protozoa (Eimeria sp.) yang menyerang saluran pencernaan ayam, umumnya ditandai dengan feses berdarah atau berlendir. Penyakit ini sering muncul pada kondisi kandang yang lembap dan padat. Segera konsultasikan ke dokter hewan atau petugas penyuluh lapangan (PPL) setempat untuk pemeriksaan dan penanganan lebih lanjut.",
-
-  "Salmonella": "Pola feses mengindikasikan kemungkinan infeksi bakteri Salmonella sp., yang dapat menyebabkan gangguan pencernaan serius pada ayam dan berpotensi menular antar unggas maupun ke manusia (zoonosis). Kebersihan kandang, pakan, dan air minum perlu diperhatikan secara ketat. Segera konsultasikan ke dokter hewan untuk pemeriksaan laboratorium dan penanganan lebih lanjut.",
-
-  "Newcastle Disease": "Pola feses mengindikasikan kemungkinan infeksi Newcastle Disease (ND), penyakit viral yang sangat menular dan dapat menyebar cepat antar unggas, sering disertai gejala pernapasan dan saraf. Kondisi ini memerlukan penanganan segera untuk mencegah penyebaran ke ternak lain. Segera hubungi dokter hewan atau dinas peternakan setempat untuk konfirmasi dan langkah pengendalian lebih lanjut."
-}
+["Healthy", "Coccidiosis", "Salmonella", "Newcastle Disease"]

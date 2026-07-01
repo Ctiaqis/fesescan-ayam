@@ -32,16 +32,23 @@ html, body, .stApp {
         #0b1120;
 }
 
-/* Kontainer utama jadi satu panel/bingkai melayang */
-.block-container {
-    max-width: 760px;
+/* Kontainer utama jadi satu panel/bingkai melayang — DIPERLEBAR untuk layout desktop (wide) */
+.block-container,
+div[data-testid="stAppViewBlockContainer"] {
+    max-width: 1280px !important;
     background: #0f172a;
     border: 1px solid var(--border);
     border-radius: 1.5rem;
     box-shadow: var(--shadow-lg);
-    padding: 2rem 2.25rem 2.5rem !important;
+    padding: 2.25rem 2.75rem 3rem !important;
     margin-top: 2.5rem;
     margin-bottom: 3rem;
+}
+
+/* BARU: jarak antar kolom (kiri-upload / kanan-hasil, dan kolom metric) */
+div[data-testid="stHorizontalBlock"] {
+    gap: 2.25rem;
+    align-items: flex-start;
 }
 
 /* ===== HERO ===== */
@@ -286,70 +293,78 @@ hr { border-color: var(--border) !important; margin: 1.5rem 0 !important; }
 }
 .disclaimer .ico { font-size: 1rem; line-height: 1.4; }
 
-#MainMenu { visibility: hidden; }
-footer { visibility: hidden; }
-[data-testid="stHeader"] { background: transparent; }
-
-/* ============================================================
-   DESKTOP LAYOUT
-   ============================================================ */
-.block-container,
-div[data-testid="stAppViewBlockContainer"] {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding-top: 2rem;
-    padding-bottom: 3rem;
-}
-
-div[data-testid="stHorizontalBlock"] {
-    gap: 2rem;
-    align-items: flex-start;
-}
-
+/* BARU: placeholder saat belum ada gambar / belum ada hasil prediksi */
 .empty-state {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
-    padding: 3.5rem 1.5rem;
-    border: 1.5px dashed rgba(148, 163, 184, 0.35);
-    border-radius: 14px;
+    min-height: 260px;
+    padding: 3rem 1.5rem;
+    background: var(--surface);
+    border: 1.5px dashed var(--border-strong);
+    border-radius: var(--radius);
     text-align: center;
-    min-height: 220px;
 }
-.empty-state-icon { font-size: 2rem; opacity: 0.6; }
-.empty-state-text { font-size: 0.9rem; opacity: 0.65; max-width: 260px; }
+.empty-state-icon {
+    font-size: 2.25rem;
+    opacity: 0.5;
+}
+.empty-state-text {
+    font-size: 0.85rem;
+    color: var(--muted-foreground);
+    max-width: 260px;
+    line-height: 1.55;
+}
 
+/* BARU: kotak penjelasan naratif dari AI (OpenAI/Claude) */
 .narrative-box {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-left: 3px solid var(--primary);
+    border-radius: var(--radius);
     padding: 1rem 1.25rem;
-    border-radius: 12px;
-    border: 1px solid rgba(148, 163, 184, 0.25);
-    line-height: 1.6;
-    font-size: 0.92rem;
+    color: var(--foreground);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    box-shadow: var(--shadow-sm);
     margin-bottom: 0.5rem;
 }
 
+#MainMenu { visibility: hidden; }
+footer { visibility: hidden; }
+[data-testid="stHeader"] { background: transparent; }
+
 /* ============================================================
-   RESPONSIVE — kembali ke 1 kolom di layar sempit
+   BARU: RESPONSIVE — desktop lebih lega, mobile tetap rapi
    ============================================================ */
+@media (min-width: 1100px) {
+    .hero { padding: 2rem 2.5rem; }
+    .hero-title { font-size: 1.75rem; }
+}
+
 @media (max-width: 900px) {
     .block-container,
     div[data-testid="stAppViewBlockContainer"] {
-        max-width: 100%;
-        padding-left: 1rem;
-        padding-right: 1rem;
+        max-width: 100% !important;
+        padding: 1.25rem 1.25rem 2rem !important;
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
+        border-radius: 1rem;
     }
     div[data-testid="stHorizontalBlock"] {
         flex-direction: column !important;
+        gap: 1.25rem;
     }
     div[data-testid="stHorizontalBlock"] > div[data-testid="column"],
     div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"] {
         width: 100% !important;
         flex: 1 1 100% !important;
     }
+    .hero { padding: 1.35rem 1.4rem; }
+    .hero-title { font-size: 1.25rem; }
+    .logo { width: 52px; height: 52px; font-size: 1.7rem; }
 }
 </style>
-
-
 """
