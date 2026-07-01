@@ -6,3 +6,5 @@ pandas==2.3.3
 pillow==12.2.0
 matplotlib==3.10.9
 opencv-python-headless==4.13.0.92
+openai
+python-dotenv

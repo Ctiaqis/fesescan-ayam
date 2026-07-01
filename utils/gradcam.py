@@ -85,11 +85,11 @@ def make_gradcam_heatmap(image: Image.Image, model, pred_index=None):
     return heatmap.numpy()
 
 
-def create_gradcam_overlay(image: Image.Image, model, alpha=0.45):
+def create_gradcam_overlay(image: Image.Image, model, pred_index=None, alpha=0.45):
     original = image.convert("RGB")
     original_arr = np.array(original)
 
-    heatmap = make_gradcam_heatmap(original, model)
+    heatmap = make_gradcam_heatmap(original, model, pred_index=pred_index)
     heatmap = cv2.resize(heatmap, (original_arr.shape[1], original_arr.shape[0]))
     heatmap_uint8 = np.uint8(255 * heatmap)
     heatmap_color = cv2.applyColorMap(heatmap_uint8, cv2.COLORMAP_JET)

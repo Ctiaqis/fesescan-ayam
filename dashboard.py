@@ -1,17 +1,15 @@
 import streamlit as st
 from PIL import Image
 import numpy as np
-
 from config import APP_TITLE, APP_SUBTITLE, DISCLAIMER, ALLOWED_EXTENSIONS
 from utils.model_loader import load_prediction_model, load_class_names
 from utils.preprocessing import predict_image
 from utils.gradcam import create_gradcam_overlay
+from utils.narrative_generator import generate_narrative
 from styles import SHADCN_CSS
 
 st.set_page_config(page_title=APP_TITLE, page_icon="🐔", layout="centered")
-
 st.markdown(SHADCN_CSS, unsafe_allow_html=True)
-
 
 def hero():
     st.markdown(
@@ -30,13 +28,11 @@ def hero():
         unsafe_allow_html=True,
     )
 
-
 def section(label: str, icon: str = ""):
     st.markdown(
         f'<div class="section-label">{icon} {label}</div>',
         unsafe_allow_html=True,
     )
-
 
 def render_probabilities(class_names, probabilities, pred_class):
     section("Probabilitas tiap Kelas", "📊")
@@ -59,10 +55,8 @@ def render_probabilities(class_names, probabilities, pred_class):
             unsafe_allow_html=True,
         )
 
-
 def main():
     hero()
-
     try:
         model = load_prediction_model()
         class_names = load_class_names()
@@ -76,18 +70,15 @@ def main():
         type=ALLOWED_EXTENSIONS,
         label_visibility="collapsed",
     )
-
     if uploaded_file is not None:
         try:
             image = Image.open(uploaded_file)
             st.image(image, caption="Preview Gambar", use_container_width=True)
-
             if st.button("🔍 Prediksi Sekarang", type="primary", use_container_width=True):
                 with st.spinner("Menganalisis gambar..."):
-                    pred_class, confidence, probabilities = predict_image(
+                    pred_class, confidence, probabilities, pred_index = predict_image(
                         model, image, class_names
                     )
-
                 st.success("Prediksi selesai!")
 
                 col1, col2 = st.columns(2)
@@ -98,15 +89,21 @@ def main():
 
                 render_probabilities(class_names, probabilities, pred_class)
 
+                section("Penjelasan AI", "📝")
+                with st.spinner("Menyusun penjelasan..."):
+                    narrative = generate_narrative(
+                        pred_class, confidence, dict(zip(class_names, probabilities))
+                    )
+                st.markdown(f'<div class="narrative-box">{narrative}</div>', unsafe_allow_html=True)
+
                 section("Visualisasi Grad-CAM", "🔥")
                 with st.spinner("Membuat Grad-CAM..."):
-                    overlay = create_gradcam_overlay(image, model)
+                    overlay = create_gradcam_overlay(image, model, pred_index=pred_index)
                     st.image(
                         overlay,
                         caption="Area fokus model saat memprediksi",
                         use_container_width=True,
                     )
-
         except Exception as e:
             st.error(f"Terjadi kesalahan saat memproses gambar: {e}")
 
@@ -119,7 +116,6 @@ def main():
         """,
         unsafe_allow_html=True,
     )
-
 
 if __name__ == "__main__":
     main()

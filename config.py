@@ -5,6 +5,17 @@ from pathlib import Path
 # ============================================================
 # KONFIGURASI UTAMA
 # ============================================================
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+OPENAI_API_KEY = os.getenv("OPEN_AI_KEY")
+NARRATIVE_MODEL = "gpt-4o-mini"  # murah, cepat, cukup untuk narasi pendek
+
+
+# test cepat, bisa taruh di akhir config.py sementara lalu hapus lagi
+print("API KEY loaded:", bool(OPENAI_API_KEY))
 
 BASE_DIR = Path(__file__).resolve().parent
 

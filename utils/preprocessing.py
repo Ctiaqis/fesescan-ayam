@@ -28,4 +28,4 @@ def predict_image(model, image: Image.Image, class_names):
     pred_class = class_names[pred_index]
     confidence = float(probabilities[pred_index])
 
-    return pred_class, confidence, probabilities
+    return pred_class, confidence, probabilities, pred_index
