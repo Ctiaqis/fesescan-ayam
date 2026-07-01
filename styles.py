@@ -289,5 +289,67 @@ hr { border-color: var(--border) !important; margin: 1.5rem 0 !important; }
 #MainMenu { visibility: hidden; }
 footer { visibility: hidden; }
 [data-testid="stHeader"] { background: transparent; }
+
+/* ============================================================
+   DESKTOP LAYOUT
+   ============================================================ */
+.block-container,
+div[data-testid="stAppViewBlockContainer"] {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+}
+
+div[data-testid="stHorizontalBlock"] {
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 3.5rem 1.5rem;
+    border: 1.5px dashed rgba(148, 163, 184, 0.35);
+    border-radius: 14px;
+    text-align: center;
+    min-height: 220px;
+}
+.empty-state-icon { font-size: 2rem; opacity: 0.6; }
+.empty-state-text { font-size: 0.9rem; opacity: 0.65; max-width: 260px; }
+
+.narrative-box {
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    line-height: 1.6;
+    font-size: 0.92rem;
+    margin-bottom: 0.5rem;
+}
+
+/* ============================================================
+   RESPONSIVE — kembali ke 1 kolom di layar sempit
+   ============================================================ */
+@media (max-width: 900px) {
+    .block-container,
+    div[data-testid="stAppViewBlockContainer"] {
+        max-width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    div[data-testid="stHorizontalBlock"] {
+        flex-direction: column !important;
+    }
+    div[data-testid="stHorizontalBlock"] > div[data-testid="column"],
+    div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"] {
+        width: 100% !important;
+        flex: 1 1 100% !important;
+    }
+}
 </style>
+
+
 """

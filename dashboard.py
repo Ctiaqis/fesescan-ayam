@@ -8,8 +8,9 @@ from utils.gradcam import create_gradcam_overlay
 from utils.narrative_generator import generate_narrative
 from styles import SHADCN_CSS
 
-st.set_page_config(page_title=APP_TITLE, page_icon="🐔", layout="centered")
+st.set_page_config(page_title=APP_TITLE, page_icon="🐔", layout="wide")
 st.markdown(SHADCN_CSS, unsafe_allow_html=True)
+
 
 def hero():
     st.markdown(
@@ -28,11 +29,25 @@ def hero():
         unsafe_allow_html=True,
     )
 
+
 def section(label: str, icon: str = ""):
     st.markdown(
         f'<div class="section-label">{icon} {label}</div>',
         unsafe_allow_html=True,
     )
+
+
+def empty_state(text: str, icon: str = "🗂️"):
+    st.markdown(
+        f"""
+        <div class="empty-state">
+            <div class="empty-state-icon">{icon}</div>
+            <div class="empty-state-text">{text}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
 
 def render_probabilities(class_names, probabilities, pred_class):
     section("Probabilitas tiap Kelas", "📊")
@@ -55,6 +70,7 @@ def render_probabilities(class_names, probabilities, pred_class):
             unsafe_allow_html=True,
         )
 
+
 def main():
     hero()
     try:
@@ -64,27 +80,41 @@ def main():
         st.error(f"Error loading model atau config: {e}")
         return
 
-    section("Unggah Citra", "📤")
-    uploaded_file = st.file_uploader(
-        "Upload citra feses ayam",
-        type=ALLOWED_EXTENSIONS,
-        label_visibility="collapsed",
-    )
-    if uploaded_file is not None:
-        try:
+    left_col, right_col = st.columns([5, 7], gap="large")
+
+    with left_col:
+        section("Unggah Citra", "📤")
+        uploaded_file = st.file_uploader(
+            "Upload citra feses ayam",
+            type=ALLOWED_EXTENSIONS,
+            label_visibility="collapsed",
+        )
+
+        image = None
+        predict_clicked = False
+
+        if uploaded_file is not None:
             image = Image.open(uploaded_file)
             st.image(image, caption="Preview Gambar", use_container_width=True)
-            if st.button("🔍 Prediksi Sekarang", type="primary", use_container_width=True):
+            predict_clicked = st.button(
+                "🔍 Prediksi Sekarang", type="primary", use_container_width=True
+            )
+        else:
+            empty_state("Unggah gambar feses ayam (.jpg / .jpeg / .png) untuk memulai", "📤")
+
+    with right_col:
+        if uploaded_file is not None and predict_clicked:
+            try:
                 with st.spinner("Menganalisis gambar..."):
                     pred_class, confidence, probabilities, pred_index = predict_image(
                         model, image, class_names
                     )
                 st.success("Prediksi selesai!")
 
-                col1, col2 = st.columns(2)
-                with col1:
+                m1, m2 = st.columns(2)
+                with m1:
                     st.metric("Kelas Terdeteksi", pred_class)
-                with col2:
+                with m2:
                     st.metric("Confidence Score", f"{confidence * 100:.2f}%")
 
                 render_probabilities(class_names, probabilities, pred_class)
@@ -94,7 +124,10 @@ def main():
                     narrative = generate_narrative(
                         pred_class, confidence, dict(zip(class_names, probabilities))
                     )
-                st.markdown(f'<div class="narrative-box">{narrative}</div>', unsafe_allow_html=True)
+                st.markdown(
+                    f'<div class="narrative-box">{narrative}</div>',
+                    unsafe_allow_html=True,
+                )
 
                 section("Visualisasi Grad-CAM", "🔥")
                 with st.spinner("Membuat Grad-CAM..."):
@@ -104,8 +137,12 @@ def main():
                         caption="Area fokus model saat memprediksi",
                         use_container_width=True,
                     )
-        except Exception as e:
-            st.error(f"Terjadi kesalahan saat memproses gambar: {e}")
+            except Exception as e:
+                st.error(f"Terjadi kesalahan saat memproses gambar: {e}")
+        elif uploaded_file is not None:
+            empty_state('Klik "Prediksi Sekarang" untuk melihat hasil analisis', "🔍")
+        else:
+            empty_state("Hasil analisis akan muncul di sini", "📊")
 
     st.markdown(
         f"""
@@ -116,6 +153,7 @@ def main():
         """,
         unsafe_allow_html=True,
     )
+
 
 if __name__ == "__main__":
     main()
